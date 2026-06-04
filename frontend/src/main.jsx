@@ -278,7 +278,7 @@ function App() {
       <nav className="topbar">
         <div className="brand">
           <span className="brand-mark"><Radio size={18} /></span>
-          <strong>PolyMonitor</strong>
+          <strong>EdgeRadar</strong>
           <em className={dataMode === '真实 Gamma 数据' ? 'source-live' : 'source-mock'}>{dataMode}</em>
         </div>
         <div className="nav-pills single-nav"><span><Activity size={16} />机会雷达</span></div>

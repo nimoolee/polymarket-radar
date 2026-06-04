@@ -25,6 +25,7 @@ frontend/.env.docker
 !frontend/.env.example
 !frontend/.env.docker.example
 logs/
+docs/assets/gif-frames/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
