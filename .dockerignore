@@ -1,0 +1,17 @@
+.DS_Store
+.git
+.env
+.env.*
+!*.env.example
+!*.env.docker.example
+.venv
+__pycache__
+*.pyc
+logs
+frontend/node_modules
+frontend/dist
+frontend/.env
+frontend/.env.docker
+backend/.venv
+backend/.env
+backend/.env.docker
