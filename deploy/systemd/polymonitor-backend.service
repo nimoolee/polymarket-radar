@@ -1,15 +1,15 @@
 [Unit]
-Description=PolyMonitor FastAPI backend
+Description=Polymarket Radar FastAPI backend
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=polymonitor
-Group=polymonitor
-WorkingDirectory=/opt/polymonitor/backend
+User=polyradar
+Group=polyradar
+WorkingDirectory=/opt/polymarket-radar/backend
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/opt/polymonitor/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+ExecStart=/opt/polymarket-radar/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=5
 

@@ -1,20 +1,70 @@
 #!/bin/zsh
 set -e
 
-ROOT="/Users/infinity/Python/Poly_Codex"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 UID_VALUE="$(id -u)"
+BACKEND_PLIST="$HOME/Library/LaunchAgents/com.polymonitor.backend.plist"
+FRONTEND_PLIST="$HOME/Library/LaunchAgents/com.polymonitor.frontend.plist"
 
 mkdir -p "$HOME/Library/LaunchAgents"
 mkdir -p "$ROOT/logs"
 
-cp "$ROOT/launchd/com.polymonitor.backend.plist" "$HOME/Library/LaunchAgents/com.polymonitor.backend.plist"
-cp "$ROOT/launchd/com.polymonitor.frontend.plist" "$HOME/Library/LaunchAgents/com.polymonitor.frontend.plist"
+cat > "$BACKEND_PLIST" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.polymonitor.backend</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>$ROOT/scripts/start_backend.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>$ROOT/backend</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>$ROOT/logs/backend.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>$ROOT/logs/backend.err.log</string>
+</dict>
+</plist>
+EOF
 
-launchctl bootout "gui/$UID_VALUE" "$HOME/Library/LaunchAgents/com.polymonitor.backend.plist" 2>/dev/null || true
-launchctl bootout "gui/$UID_VALUE" "$HOME/Library/LaunchAgents/com.polymonitor.frontend.plist" 2>/dev/null || true
+cat > "$FRONTEND_PLIST" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.polymonitor.frontend</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>$ROOT/scripts/start_frontend.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>$ROOT/frontend</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>$ROOT/logs/frontend.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>$ROOT/logs/frontend.err.log</string>
+</dict>
+</plist>
+EOF
 
-launchctl bootstrap "gui/$UID_VALUE" "$HOME/Library/LaunchAgents/com.polymonitor.backend.plist"
-launchctl bootstrap "gui/$UID_VALUE" "$HOME/Library/LaunchAgents/com.polymonitor.frontend.plist"
+launchctl bootout "gui/$UID_VALUE" "$BACKEND_PLIST" 2>/dev/null || true
+launchctl bootout "gui/$UID_VALUE" "$FRONTEND_PLIST" 2>/dev/null || true
+
+launchctl bootstrap "gui/$UID_VALUE" "$BACKEND_PLIST"
+launchctl bootstrap "gui/$UID_VALUE" "$FRONTEND_PLIST"
 launchctl enable "gui/$UID_VALUE/com.polymonitor.backend"
 launchctl enable "gui/$UID_VALUE/com.polymonitor.frontend"
 launchctl kickstart -k "gui/$UID_VALUE/com.polymonitor.backend"

@@ -1,7 +1,8 @@
 #!/bin/zsh
 set -e
 
-ROOT="/Users/infinity/Python/Poly_Codex"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 UID_VALUE="$(id -u)"
 
 if [[ "${1:-}" == "--unload" ]]; then
